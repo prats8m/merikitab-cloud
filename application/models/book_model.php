@@ -1,0 +1,34 @@
+<?php
+
+/**
+*
+*/
+class Book_model extends CI_Model{
+
+  /**************************************************************
+  Function to list  school from db
+  ****************************************************************/
+  public function list_book($where,$limit,$offset){
+  $this->db->select('*')
+  ->join('school_book', 'book.book_id = school_book.book_id');
+  $this->db->where($where);
+  $this->db->group_by('book.book_id');
+  $result = $this->db->get('book',$limit,$offset)->result_array();
+  return $result;
+  }
+
+
+   /**************************************************************
+  Function to count  school from db
+  ****************************************************************/
+  public function count_book($where){
+  $this->db->select('*')
+  ->join('school_book', 'book.book_id = school_book.book_id');
+  $this->db->where($where);
+  $this->db->group_by('book.book_id');
+  $result = $this->db->get('book',$limit,$offset)->result_array();
+   return count($result);
+  }
+  }
+
+?>
