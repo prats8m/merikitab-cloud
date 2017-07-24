@@ -20,37 +20,42 @@ public function list_school($index){
     $where = "";
     $i=0;
     if(count($data['city'])){
-        foreach ($data['city'] as $key => $item) {
+        $city = "";
+        foreach($data['city'] as $key => $item){
             if(count($data['city']) == $key+1){
-                $where = $where."`school_city` = '".$item."' ";
+                $city = $city."'".$item."'";
             }
             else{
-                $where = $where."`school_city` = '".$item."' AND ";
+                $city = $city."'".$item."'".",";
             }
-            $i++;
         }
-    }
+        $where = $where."`school_city` IN (".$city.") ";
+        }
     else{
         $where = $where."`school_city` LIKE '%%' ";
     }
+
     
     $where = $where."AND ";
     if(count($data['type'])){
-        foreach ($data['type'] as $key => $item) {
+        $type = "";
+        foreach($data['type'] as $key => $item){
             if(count($data['type']) == $key+1){
-                $where = $where."`school_type`='".$item."'";
+                $type = $type."'".$item."'";
             }
             else{
-                $where = $where."`school_type`='".$item."' AND ";
+                $type = $type."'".$item."'".",";
             }
-            $i++;
         }
-    }
+        $where = $where."`school_type` IN (".$type.") ";
+        }
     else{
         $where = $where."`school_type` LIKE '%%' ";
     }
-
-    $response = $this->sm->list_school($where);
+    $response_data = $this->sm->list_school($where,$limit,$offset);
+    $response_count = $this->sm->count_School($where);
+    $response['data'] = $response_data;
+    $response['count'] = $response_count;
     $this->gm->send_response(true,"Success",$response,'');
 }
 

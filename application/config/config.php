@@ -369,6 +369,6 @@ $config['proxy_ips'] = '';
 /* End of file config.php */
 /* Location: ./application/config/config.php */
 $config['number_of_school_in_one_list']=5;
-$config['number_of_school_in_one_view']=8;
+$config['number_of_school_in_one_view']=3;
 $config['number_of_book_in_one_list']=5;
 $config['number_of_book_in_one_view']=4;

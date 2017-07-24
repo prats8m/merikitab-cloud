@@ -19,7 +19,7 @@ public function list_book($index){
     $data = json_decode(file_get_contents("php://input"), true); // decode json
     $where = "";
     $i=0;
-    if(count($data['class'])){
+    if(count($data['class'])){ 
         $class = "";
         foreach($data['class'] as $key => $item){
             if(count($data['class']) == $key+1){
