@@ -10,7 +10,8 @@ class Admin_school_model extends CI_Model{
   ****************************************************************/
   public function add_school($data){
 
-    return $this->db->insert('school',$data);
+    $this->db->insert('school',$data);
+return $this->db->insert_id();
   }
 
   /**************************************************************

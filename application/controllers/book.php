@@ -155,4 +155,22 @@ public function list_book($index){
 }
 
 
+public function view_book(){
+    $data = json_decode(file_get_contents("php://input"), true); // decode json
+    $book_id = $data['book_id'];
+    $select = ['*'];
+    $where = array(
+        'book_id' => $book_id,
+        'book_status' => 1
+    );
+
+    $response = $this->bm->select_book($select, $where);
+    if($response){
+        $this->gm->send_response(false,"Sorry Book Not Available",$response,'');
+    }   
+    else{
+        $this->gm->send_response(true,"Success",$response,'');
+    }
+}
+
 }

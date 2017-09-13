@@ -2,17 +2,106 @@
 header('Access-Control-Allow-Origin', '*');
 // error_reporting(0);
 class Admin_book extends CI_Controller {
-
+ 
 
   public function __construct() {
     parent::__construct();
     $this->load->database();
     $this->load->config();
+    $this->load->model('s3_model');
     $this->load->model("general_model",'gm');
     $this->load->model('admin_book_model','abm');
     $this->load->helper('url', 'form');
   }
 
+
+
+public function upload_book_pic(){
+    
+      $file = $_FILES['file'];
+      if($file){
+
+      $book_id = $this->input->post('book_id');
+      $is_uploaded=$this->upload_files($file,$book_id);
+        if($is_uploaded['status'])
+        {
+            $update_data = array(
+            'book_id' => $book_id,
+            'book_pic'=>$is_uploaded['path']
+            );
+        $msg         = "<strong>" . $session_data['username'] . "<strong>" . " added book pic " . $data['name'];
+        $this->gm->add_notification($msg);
+        $response = $this->abm->edit_book($update_data);
+        $this->gm->send_response(true, 'success','','');
+        }
+        else
+        {
+            $this->gm->send_response(false, 'Some Error Occured','','');
+        }
+      }
+      die; 
+    }
+    
+    public function upload_files($file,$book_id)
+    {
+        
+            if (!isset($file)) {
+                return array(
+                    'status' => false,
+                    'error' => 'Please upload the file',
+                    'file' => $file
+                );
+            }
+            if ($file['name'] != '' and $file['size'] > 0) {
+                
+                $name       = $file['name'];
+                $path_parts = pathinfo($name);
+                $ext = strtolower($path_parts["extension"]);
+                
+                
+                $bucket_name = $this->config->config['bucket_name'];
+                $image_name  = 'book_' .$book_id. '_'. time() . '.' . $ext;
+                
+                $quality         = $this->config->config['image_compression_quality'];
+                $source_url      = $file["tmp_name"];
+                $destination_url = $this->config->config['school_temp_image_path']  . '/mkschool/school_' .$book_id. '.' . $ext;
+                $info            = getimagesize($source_url);
+                if ($info['mime'] == 'image/jpeg')
+                    $image = imagecreatefromjpeg($source_url);
+                elseif ($info['mime'] == 'image/gif')
+                    $image = imagecreatefromgif($source_url);
+                elseif ($info['mime'] == 'image/png')
+                    $image = imagecreatefrompng($source_url);
+                imagejpeg($image, $destination_url, $quality);
+                  
+                try {
+                    $object_name = $this->s3_model->create_object($bucket_name,'book', $image_name,$file["tmp_name"], $file['type']);
+                    unlink($destination_url);
+                }
+                
+                catch (Exception $e) {
+                    return array(
+                        'status' => false,
+                        'error' => $e->getMessage(),
+                        'file' => $file
+                    );
+                    
+                }
+                
+                $file_name= $object_name;
+            } else {
+                return array(
+                    'status' => false,
+                    'error' => 'Please upload the valid file',
+                    'file' => $file
+                );
+            }
+        
+        return array(
+            'status' => true,
+            'path' => $file_name
+        );
+    }
 
   public function add_book(){
     $data = json_decode(file_get_contents("php://input"), true); // decode json
@@ -57,18 +146,19 @@ class Admin_book extends CI_Controller {
     );
     //transactions start
     $this->db->trans_start();
-    $response=$this->abm->add_book($insert_data);
+    $response['book_id']=$this->abm->add_book($insert_data);
     $insert_data=array();
     for($i=0;$i<count($data['school']);$i++){
         $insert_data[$i]=array();
         $insert_data[$i]=array(
             'school_id'=>$data['school'][$i],
-            'book_id'=>$response
+            'book_id'=>$response['book_id']
         );
     }
 
     $msg="<strong>".$session_data['username']."<strong>"." added Book ".$data['book_name'];
     $this->gm->add_notification($msg);
+    if(count($data['school']))
     $this->abm->add_school_book($insert_data);
 
     $this->db->trans_complete();
@@ -113,7 +203,8 @@ class Admin_book extends CI_Controller {
         'book_language'=>$data['book_language']
     );
 
-    $response=$this->abm->edit_book($update_data);
+    $this->abm->edit_book($update_data);
+    $response['book_id']=$data['book_id'];
     $update_data=array();
     for($i=0;$i<count($data['school']);$i++){
         $update_data[$i]=array();

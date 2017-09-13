@@ -28,8 +28,13 @@ class Admin_book_model extends CI_Model{
   ****************************************************************/
   public function list_book($limit,$offset){
     $this->db->cache_on();
+    $this->db->join('publication','publication.publication_id=book.book_publication');
+    $this->db->join('class','class.class_id=book.book_class');
+    $this->db->join('book_type','book_type.bt_id=book.book_type');
+    $this->db->join('author','author.author_id=book.book_author');
     $this->db->order_by("book_id", "desc"); 
     $query= $this->db->get('book',$limit,$offset)->result_array();
+    // echo $this->db->last_query();
     return $query;
   }
 
@@ -55,9 +60,14 @@ class Admin_book_model extends CI_Model{
   public function view_book($book_id){
     $this->db->where('book.book_id', $book_id);
     $this->db->from('book');
-    $this->db->join('school_book','school_book.book_id=book.book_id');
-    $this->db->join('school','school.school_id=school_book.school_id');
+    $this->db->join('publication','publication.publication_id=book.book_publication','left');
+    $this->db->join('class','class.class_id=book.book_class','left');
+    $this->db->join('book_type','book_type.bt_id=book.book_type','left');
+    $this->db->join('author','author.author_id=book.book_author','left');
+    $this->db->join('school_book','school_book.book_id=book.book_id','left');
+    $this->db->join('school','school.school_id=school_book.school_id','left');
     $query= $this->db->get()->result_array();
+    
     return $query;
   }
 

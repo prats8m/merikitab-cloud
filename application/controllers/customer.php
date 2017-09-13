@@ -47,9 +47,10 @@ public function signup(){
 
 public function login(){
     $data = json_decode(file_get_contents("php://input"), true); // decode json
-    $select=array('customer_email','customer_password','customer_name');
+    $select=array('customer_email','customer_password','customer_name','customer_id');
     $where=array('customer_email'=>$data['customer_email'],'customer_password'=>md5($data['customer_password']));
     $customer=$this->cm->select_customer($select,$where);
+    print_r($customer);
     if(count($customer)){
         $sesssion_data = array(
         'customer_email'  => $customer[0]['customer_email'],

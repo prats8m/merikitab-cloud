@@ -29,6 +29,14 @@ class Book_model extends CI_Model{
   $result = $this->db->get('book',$limit,$offset)->result_array();
    return count($result);
   }
+
+
+   public function select_book($select,$where){
+    $this->db->select($select);
+    $this->db->where($where);
+    $query= $this->db->get('book')->result_array();
+    return $query[0];
+  }
   }
 
 ?>

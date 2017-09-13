@@ -370,5 +370,12 @@ $config['proxy_ips'] = '';
 /* Location: ./application/config/config.php */
 $config['number_of_school_in_one_list']=5;
 $config['number_of_school_in_one_view']=3;
+$config['number_of_author_in_one_list']=5;
 $config['number_of_book_in_one_list']=5;
 $config['number_of_book_in_one_view']=4;
+
+
+
+$config['image_compression_quality']=50;
+$config['school_temp_image_path']='https://s3-us-east-2.amazonaws.com';
+$config['bucket_name']='merikitab';

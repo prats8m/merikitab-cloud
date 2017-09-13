@@ -12,13 +12,34 @@ public function __construct() {
     $this->load->helper('url', 'form');
   }
 
-public function list_book_type_filter(){
-    $where = [];
-    $response = $this->btm->list_book_type($where);
-    foreach($response as $key => $item){
-        $result[$key]['bt_id'] = $item['bt_id'];
-        $result[$key]['bt_name'] = $item['bt_name'];
-    }
-    $this->gm->send_response(true,"Success",$result,'');
+
+
+public function list_book_type($index){
+    $limit  = $this->config->item('number_of_author_in_one_list');
+        $offset = ($index - 1) * $this->config->item('number_of_author_in_one_list');
+        if ($index == 0) {
+            $limit  = 10000;
+            $offset = 0;
+        }
+        // echo $limit;
+        // echo $offset;
+        $response_data  = $this->btm->list_book_type($limit, $offset);
+        // die;
+        $response_count = $this->btm->count_book_type();
+        if ($index == 0) {
+            for ($i = 0; $i < count($response_data); $i++) {
+                $response[$i]['bt_id']   = $response_data[$i]['bt_id'];
+                $response[$i]['bt_name'] = $response_data[$i]['bt_name'];
+            }
+        }
+        if ($index == 0) {
+            $result['data'] = $response;
+        } else {
+            $result['data'] = $response_data;
+        }
+        $result['count'] = $response_count;
+        
+        $this->gm->send_response(true, "List of Book types", $result, '');
 }
+
 }
