@@ -28,10 +28,10 @@ class Admin_book_model extends CI_Model{
   ****************************************************************/
   public function list_book($limit,$offset){
     $this->db->cache_on();
-    $this->db->join('publication','publication.publication_id=book.book_publication');
-    $this->db->join('class','class.class_id=book.book_class');
-    $this->db->join('book_type','book_type.bt_id=book.book_type');
-    $this->db->join('author','author.author_id=book.book_author');
+    $this->db->join('publication','publication.publication_id=book.book_publication','left');
+    $this->db->join('class','class.class_id=book.book_class','left');
+    $this->db->join('book_type','book_type.bt_id=book.book_type','left');
+    $this->db->join('author','author.author_id=book.book_author','left');
     $this->db->order_by("book_id", "desc"); 
     $query= $this->db->get('book',$limit,$offset)->result_array();
     // echo $this->db->last_query();
