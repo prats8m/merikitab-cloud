@@ -9,8 +9,8 @@ return array(
         // providing a default region setting.
         'default_settings' => array(
             'params' => array(
-             'key'    => 'AKIAJUNZF5JBBNTNXSIQ',
-                'secret' => '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',
+             'key'    => 'AKIAJQGB62E3DRQJAALQ',
+                'secret' => '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',
 					'region' => 'us-west-2'
                 
             )
