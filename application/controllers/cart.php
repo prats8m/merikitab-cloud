@@ -123,49 +123,7 @@ class Cart extends CI_Controller {
 
 
 
-  public function signup(){
-    $data = json_decode(file_get_contents("php://input"), true); // decode json
-    $email = $data['email'];
-    $name = $data['school_name'];
-    $password = md5($data['password']);
-    $address = $data['school_address'];
-    $mobile = $data['mobiel'];
-    $number_of_student = $data['number_of_student'];
-    $number_of_teacher = $data['number_of_teacher'];
-    $select = ['school_email'];
-    $where = array(
-        'school_email'=>$email
-    );
-
-    $response = $this->um->select_school($select,$where);
-    if(count($response)){
-        echo "school email already exist";
-    }
-    else{
-       $where = array(
-        'school_name'=>$name
-    );
-    $response = $this->um->select_school($select,$where);
-    if(count($response)){
-        echo "school name already exist";
-    }
-    else{
-        $insert_data = array(
-            'school_email'=>$email,
-            'school_name'=>$name,
-            'school_password'=>$password,
-            'school_mobile'=>$mobile,
-            'school_address'=>$address,
-            'number_of_student'=>$number_of_student,
-            'number_of_teacher'=>$number_of_teacher
-        );
-
-        $this->um->insert_school($insert_data);
-        echo "Signup Successful";
-    }
-    }
-
-  }
+  
 }
 
 ?>

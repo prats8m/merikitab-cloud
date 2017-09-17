@@ -372,7 +372,7 @@ $config['number_of_school_in_one_list']=5;
 $config['number_of_school_in_one_view']=3;
 $config['number_of_author_in_one_list']=5;
 $config['number_of_book_in_one_list']=5;
-$config['number_of_book_in_one_view']=4;
+$config['number_of_book_in_one_view']=20;
 
 
 

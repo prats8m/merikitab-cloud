@@ -32,7 +32,7 @@ public function list_book($index){
         $where = $where."`book_class` IN (".$class.") ";
         }
     else{
-        $where = $where."`book_class` LIKE '%%' ";
+        $where = $where."`book.book_id` LIKE '%%' ";
     }
     
     $where = $where."AND ";
@@ -138,7 +138,7 @@ public function list_book($index){
         $where = $where."`school_id` IN (".$school_id.") ";
         }
     else{
-        $where = $where."`school_id` LIKE '%%' ";
+        $where = $where."`book_author` LIKE '%%' ";
     }
 
     if($data['price']){
